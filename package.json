@@ -13,9 +13,11 @@
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/native-stack": "^7.2.0",
     "axios": "^1.7.9",
+    "nativewind": "4.0.1",
     "react": "18.3.1",
     "react-native": "0.76.0",
     "react-native-google-places-autocomplete": "^2.5.7",
+    "react-native-reanimated": "^3.16.6",
     "react-native-safe-area-context": "^5.0.0",
     "react-native-screens": "^4.4.0",
     "react-native-svg": "^15.10.1"
@@ -39,7 +41,8 @@
     "prettier": "2.8.8",
     "react-native-svg-transformer": "^1.5.0",
     "react-test-renderer": "18.3.1",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "tailwindcss": "3.4.13"
   },
   "engines": {
     "node": ">=18"

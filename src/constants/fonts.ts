@@ -1,14 +1,13 @@
-import {Platform} from 'react-native';
-
-const isIOS = () => {
-    return Platform.OS === 'ios';
-  };
+export const fontFamily = {
+    regular: 'Nunito_400Regular',
+    medium: 'Nunito_500Medium',
+    bold: 'Nunito_700Bold'
+};
 
 export const fontFamilies = {
     NUNITO: {
-        normal: isIOS() ? 'Nunito-Regular' : 'NunitoRegular',
-        medium: isIOS() ? 'Nunito-Medium' : 'NunitoMedium',
-        bold: isIOS() ? 'Nunito-Bold' : 'NunitoBold',
+        normal: 'NunitoRegular',
+        medium: 'NunitoMedium',
+        bold: 'NunitoBold'
     }
-    // Adjust the above code to fit your chosen fonts' names
 };

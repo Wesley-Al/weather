@@ -5,11 +5,12 @@
  * @format
  */
 
+import './global.css';
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import Home from './pages/home';
+import Home from './src/pages/home';
 
 function App(): React.JSX.Element {
   const backgroundStyle = {

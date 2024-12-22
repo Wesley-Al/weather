@@ -1,12 +1,13 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { withNativeWind } = require('nativewind/metro')
 
 const defaultConfig = getDefaultConfig(__dirname);
 
 const {
   resolver: { sourceExts, assetExts },
-} = getDefaultConfig(__dirname);
+} = defaultConfig;
 
-const config = {
+const config =  mergeConfig(defaultConfig, {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
@@ -20,6 +21,6 @@ const config = {
     assetExts: assetExts.filter(ext => ext !== 'svg'),
     sourceExts: [...sourceExts, 'svg'],
   },
-};
+});
 
-module.exports = mergeConfig(defaultConfig, config);
+module.exports = withNativeWind(config, { input: './src/global.css'})
