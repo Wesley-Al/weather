@@ -25,6 +25,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { getFontFamily } from '../../utils/fontFamily';
 import CustomText from '../../components/CustomText';
+import GoogleInput from '../../components/GeocodingInput'
 
 import SVGStar from "../../assets/icons/star.svg";
 import SVGMenu from "../../assets/icons/menu.svg";
@@ -65,15 +66,19 @@ export default () => {
 
     return (
         <View>
-            <ScrollView style={styles.content}>
-                <HeaderPage />
+            <ScrollView className='gap-16' style={styles.content}>
+                <View className='flex-1 flex-col gap-9'>
+                    <HeaderPage />
 
-                <View>
-                    <View>
-                        <CustomText size={37}>28°</CustomText>
-                        <CustomText>11:02 Ensolarado</CustomText>
+                    <View className='flex-1 flex-col gap-5'>
+                        <View className='flex-1 flex-col gap-2'>
+                            <CustomText size={37}>28°</CustomText>
+                            <CustomText>11:02 Ensolarado</CustomText>
+                        </View>
+                        <CustomText>28° / 22° Sensação térmica de 31°</CustomText>
                     </View>
-                    <CustomText>28° / 22° Sensação térmica de 31°</CustomText>
+
+                    <GoogleInput />
                 </View>
             </ScrollView>
             <ImageBackground style={{ width: width, height: height, opacity: 0.52, position: 'absolute', zIndex: 0 }} source={imageWeather} />
@@ -98,7 +103,7 @@ const styles = StyleSheet.create({
         height: height,
         zIndex: 100,
         padding: 20,
-        paddingVertical: 30
+        paddingVertical: 30,
     },
 
     headerPage: {
