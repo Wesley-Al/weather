@@ -66,19 +66,19 @@ export default () => {
 
     return (
         <View>
-            <ScrollView className='gap-16' style={styles.content}>
-                <View className='flex-1 flex-col gap-9'>
+            <ScrollView style={styles.scrollContent}>
+                <View style={styles.content}>
                     <HeaderPage />
 
-                    <View className='flex-1 flex-col gap-5'>
-                        <View className='flex-1 flex-col gap-2'>
-                            <CustomText size={37}>28°</CustomText>
-                            <CustomText>11:02 Ensolarado</CustomText>
-                        </View>
-                        <CustomText>28° / 22° Sensação térmica de 31°</CustomText>
+                    <View style={{ flex: 1, flexDirection: "column", gap: 2 }}>
+                        <CustomText size={37}>28°</CustomText>
+                        <CustomText>11:02 Ensolarado</CustomText>
                     </View>
 
-                    <GoogleInput />
+                    <View style={{ flex: 1, flexDirection: "column", gap: 15 }}>
+                        <CustomText>28° / 22° Sensação térmica de 31°</CustomText>
+                        <GoogleInput />
+                    </View>
                 </View>
             </ScrollView>
             <ImageBackground style={{ width: width, height: height, opacity: 0.52, position: 'absolute', zIndex: 0 }} source={imageWeather} />
@@ -99,11 +99,17 @@ const styles = StyleSheet.create({
         gap: 15
     },
     content: {
+        flex: 1,
+        gap: 30,
+        flexDirection: "column"
+    },
+
+    scrollContent: {
         width: width,
         height: height,
         zIndex: 100,
         padding: 20,
-        paddingVertical: 30,
+        paddingVertical: 30
     },
 
     headerPage: {
