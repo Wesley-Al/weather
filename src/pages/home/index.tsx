@@ -27,8 +27,7 @@ import { getFontFamily } from '../../utils/fontFamily';
 import CustomText from '../../components/CustomText';
 import GoogleInput from '../../components/GeocodingInput'
 
-import SVGStar from "../../assets/icons/star.svg";
-import SVGMenu from "../../assets/icons/menu.svg";
+import { useNavigation } from '@react-navigation/native';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -41,6 +40,8 @@ export default () => {
     const isDarkMode = useColorScheme() === 'dark';
     const [imageWeather, setImageWeather] = useState();
 
+    const navigation = useNavigation();
+
     const handleAddFavorite = () => {
         setImageWeather(require("../../assets/wallpaper-weather/light/rain.jpg"));
     }
@@ -48,28 +49,12 @@ export default () => {
         setImageWeather(require("../../assets/wallpaper-weather/light/sunny.jpg"));
     }, [])
 
-    const HeaderPage = () => {
-        return (
-            <View style={styles.headerPage}>
-                <TouchableOpacity onPress={handleAddFavorite}>
-                    <SVGMenu width={24} height={24} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleAddFavorite}>
-                    <View style={styles.buttonPrimary}>
-                        <CustomText>Adicione aos favoritos</CustomText>
-                        <SVGStar width="19" height="19" />
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
-    }
+
 
     return (
-        <View>
+        <View style={{ backgroundColor: "black" }}>
             <ScrollView style={styles.scrollContent}>
                 <View style={styles.content}>
-                    <HeaderPage />
-
                     <View style={{ flex: 1, flexDirection: "column", gap: 2 }}>
                         <CustomText size={37}>28°</CustomText>
                         <CustomText>11:02 Ensolarado</CustomText>
@@ -81,7 +66,15 @@ export default () => {
                     </View>
                 </View>
             </ScrollView>
-            <ImageBackground style={{ width: width, height: height, opacity: 0.52, position: 'absolute', zIndex: 0 }} source={imageWeather} />
+            <ImageBackground style={{
+                width: width,
+                height: height,
+                opacity: 0.52,
+                position: 'absolute',
+                zIndex: 0,
+                top: -120
+
+            }} source={imageWeather} />
         </View>
     )
 }
