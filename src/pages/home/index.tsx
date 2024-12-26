@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Alert,
     Dimensions,
@@ -20,6 +20,7 @@ import WeatherService from '../../services/weatherService';
 import { WeatherDataClass } from '../../class/WeatherDataClass';
 import { WeatherClass } from '../../class/WeatherClass';
 import { WeatherDataHourlyClass } from '../../class/WeatherDataHourlyClass';
+import { useWeatherStore } from '../../store/WeatherStore';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -32,6 +33,9 @@ export default () => {
     const isDarkMode = useColorScheme() === 'dark';
     const [imageWeather, setImageWeather] = useState();
     const [currentCity, setCurrentCity] = useState<WeatherClass>();
+    const [currentHours, setCurrentHours] = useState("");
+    const { setCurrentWeather } = useWeatherStore();
+
 
     const navigation = useNavigation();
 
@@ -44,7 +48,15 @@ export default () => {
 
         if (geometryLocation != null) {
             WeatherService.getList(geometryLocation.lat, geometryLocation.lng)
-                .then((response: AxiosResponse) => setCurrentCity(response.data))
+                .then((response: AxiosResponse<WeatherClass>) => {
+                    setCurrentWeather({
+                        lat: response.data.lat,
+                        lon: response.data.lon,
+                        cityLabel: data.description
+                    });
+
+                    setCurrentCity(response.data);
+                })
                 .catch((error: AxiosError) => {
                     Alert.alert("Ops...", "Ocorreu um erro na pesquisa")
                 });
@@ -79,10 +91,12 @@ export default () => {
 
     const peakCelsius = (max: boolean, arrayHoursWeather: Array<WeatherDataHourlyClass>) => {
         if (arrayHoursWeather != null) {
+            const listHours = arrayHoursWeather.slice(0, 12);
+
             if (max) {
-                return getMaxCelsius(arrayHoursWeather);
+                return getMaxCelsius(listHours);
             } else {
-                return getMinCelsius(arrayHoursWeather);
+                return getMinCelsius(listHours);
             }
         } else {
             { temp: 0 }
@@ -92,7 +106,16 @@ export default () => {
     useEffect(() => {
         setImageWeather(require("../../assets/wallpaper-weather/light/sunny.jpg"));
 
-        console.log(currentCity);
+        const interval = setInterval(() => {
+            setCurrentHours(new Date().toLocaleString("pt-Br", {
+                timeStyle: "short",
+                timeZone: currentCity?.timezone
+            }));
+        }, 1000);
+
+        return () => {
+            clearInterval(interval);
+        }
     }, [currentCity]);
 
     return (
@@ -102,10 +125,7 @@ export default () => {
 
                     <View style={{ flex: 1, flexDirection: "column", gap: 2 }}>
                         <CustomText size={37}>{convertCelsius(currentCity?.current.temp)}</CustomText>
-                        <CustomText style={{ textTransform: "capitalize" }}>{new Date().toLocaleString("pt-Br", {
-                            timeStyle: "short",
-                            timeZone: currentCity?.timezone
-                        })} {currentCity?.current.weather[0].description}</CustomText>
+                        <CustomText style={{ textTransform: "capitalize" }}>{currentHours} {currentCity?.current.weather[0].description}</CustomText>
                     </View>
 
                     <View style={{ flex: 1, flexDirection: "column", gap: 15 }}>

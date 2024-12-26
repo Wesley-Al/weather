@@ -10,20 +10,27 @@ import MyDrawer from './components/Drawer';
 import Favorites from './pages/favorites';
 import Home from './pages/home';
 import { getFontFamily } from './utils/fontFamily';
+import { useWeatherStore } from './store/WeatherStore';
 
 const Drawer = createDrawerNavigator();
 const mobileWidth = Dimensions.get('window').width;
 const mobileHeight = Dimensions.get('window').height;
 
 export default function App() {
+  const { currentWeather } = useWeatherStore();
+
 
   const HeaderComponent = (props: DrawerHeaderProps) => {
     const navigation = useNavigation();
     const routeName = props.route.name;
     let itemHeader;
 
+    const handleAddFavorite = () => {
+      console.log(currentWeather);
+    }
+
     if (routeName === 'Home') {
-      itemHeader = (<TouchableOpacity style={{ ...styles.buttonPrimary, maxWidth: 200 }}>
+      itemHeader = (<TouchableOpacity onPress={handleAddFavorite} style={{ ...styles.buttonPrimary, maxWidth: 200 }}>
         <CustomText size={13}>Adicione aos favoritos</CustomText>
         <SVGStar width="15" height="15" />
       </TouchableOpacity>);
