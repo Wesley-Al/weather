@@ -1,4 +1,4 @@
-import { createDrawerNavigator, DrawerNavigationOptions } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerHeaderProps, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 
@@ -19,8 +19,12 @@ export default function App() {
     },
   };
 
+  const getHeader = (props: DrawerHeaderProps) => {
+    return (<Header {...props} />)
+  }
+
   const configDrawer: DrawerNavigationOptions = {
-    header: Header,
+    header: getHeader,
     drawerStyle: {
       backgroundColor: "rgba(0, 0, 0, 0.31)",
       borderTopEndRadius: 30,

@@ -2,9 +2,11 @@ import { Text, TextStyle } from "react-native";
 import { getFontFamily } from "../utils/fontFamily";
 import { ReactNode } from "react";
 
-const CustomText = (props: { children: string, size?: number, color?: string, style?: TextStyle }) => {
+const CustomText = (props: { children: string, numberOfLines?: number, size?: number, color?: string, style?: TextStyle }) => {
     return (
-        <Text style={{
+        <Text 
+        numberOfLines={props.numberOfLines}
+        style={{
             ...props.style,
             color: props.color ?? "white",
             fontSize: props.size ?? 17,

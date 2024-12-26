@@ -21,6 +21,7 @@ import { WeatherDataClass } from '../../class/WeatherDataClass';
 import { WeatherClass } from '../../class/WeatherClass';
 import { WeatherDataHourlyClass } from '../../class/WeatherDataHourlyClass';
 import { useWeatherStore } from '../../store/session/WeatherStore';
+import { storage } from '../../store/local/Storage';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -105,7 +106,7 @@ export default () => {
 
     useEffect(() => {
         setImageWeather(require("../../assets/wallpaper-weather/light/sunny.jpg"));
-
+        storage.delete("favorites");
         const interval = setInterval(() => {
             setCurrentHours(new Date().toLocaleString("pt-Br", {
                 timeStyle: "short",
@@ -116,6 +117,8 @@ export default () => {
         return () => {
             clearInterval(interval);
         }
+
+        
     }, [currentCity]);
 
     return (
