@@ -3,8 +3,8 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import CustomText from './CustomText';
-import SVGMenu from "../assets/icons/menu.svg";
+import CustomText from '../CustomText';
+import SVGMenu from "../../assets/icons/menu.svg";
 import { DrawerActions } from '@react-navigation/native';
 import { View } from 'react-native';
 

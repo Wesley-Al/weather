@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { WeatherStoreClass } from '../class/WeatherStoreClass';
+import { WeatherStoreClass } from '../../class/WeatherStoreClass';
 
 export type WeatherStore = {
     currentWeather: WeatherStoreClass | null,

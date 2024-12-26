@@ -20,7 +20,7 @@ import WeatherService from '../../services/weatherService';
 import { WeatherDataClass } from '../../class/WeatherDataClass';
 import { WeatherClass } from '../../class/WeatherClass';
 import { WeatherDataHourlyClass } from '../../class/WeatherDataHourlyClass';
-import { useWeatherStore } from '../../store/WeatherStore';
+import { useWeatherStore } from '../../store/session/WeatherStore';
 
 type SectionProps = PropsWithChildren<{
     title: string;
