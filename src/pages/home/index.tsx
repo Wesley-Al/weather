@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
     Dimensions,
@@ -16,12 +16,10 @@ import GoogleInput from '../../components/GeocodingInput';
 import { useNavigation } from '@react-navigation/native';
 import { AxiosError, AxiosResponse } from 'axios';
 import { GooglePlaceData, GooglePlaceDetail } from 'react-native-google-places-autocomplete';
-import WeatherService from '../../services/weatherService';
-import { WeatherDataClass } from '../../class/WeatherDataClass';
 import { WeatherClass } from '../../class/WeatherClass';
 import { WeatherDataHourlyClass } from '../../class/WeatherDataHourlyClass';
+import WeatherService from '../../services/weatherService';
 import { useWeatherStore } from '../../store/session/WeatherStore';
-import { storage } from '../../store/local/Storage';
 
 type SectionProps = PropsWithChildren<{
     title: string;

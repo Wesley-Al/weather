@@ -1,6 +1,6 @@
-import { WeatherMinutelyClass } from "./WeatherMinutelyClass"
 import { WeatherDataClass } from "./WeatherDataClass"
 import { WeatherDataDailyClass } from "./WeatherDataDailyClass"
+import { WeatherMinutelyClass } from "./WeatherMinutelyClass"
 
 export interface WeatherClass {
     lat: number,
