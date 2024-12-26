@@ -151,7 +151,7 @@ export default () => {
             <ImageBackground style={{
                 width: width,
                 height: height,
-                opacity: 0.52,
+                opacity: 0.35,
                 position: 'absolute',
                 zIndex: 0,
                 top: -120

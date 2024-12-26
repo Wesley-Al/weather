@@ -3,7 +3,7 @@ import { getFavoritesStorage, storage } from "../../store/local/Storage"
 import CustomText from "../../components/CustomText"
 import { ScrollView } from "react-native-gesture-handler"
 import { WeatherStoreClass } from "../../class/WeatherStoreClass"
-import { Alert, StyleSheet, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Alert, StyleSheet, TouchableOpacity, View } from "react-native"
 import SVGTrash from "../../assets/icons/trash.svg"
 import WeatherService from "../../services/weatherService"
 import { AxiosError, AxiosResponse } from "axios"
@@ -14,6 +14,7 @@ import { useWeatherStore } from "../../store/session/WeatherStore"
 export default () => {
     const navigation = useNavigation();
     const { setCurrentWeather } = useWeatherStore();
+    const [loading, setLoading] = useState(false);
     const [listFavorites, setListFavorites] = useState<Array<WeatherStoreClass>>([])
     const [listFavoritesDetails, setListFavoritesDetails] = useState<Array<WeatherStoreClass>>([])
 
@@ -31,6 +32,7 @@ export default () => {
 
     const updateListFavorites = () => {
         if (listFavorites.length != 0) {
+            setLoading(true);
             listFavorites?.forEach((item: WeatherStoreClass, index) => {
                 WeatherService.getList(item.lat, item.lon, "minutely,hourly,daily,alerts").then((response: AxiosResponse<WeatherClass>) => {
                     item.weatherDescription = response.data.current.weather[0].description;
@@ -42,6 +44,8 @@ export default () => {
                     })
                 }).catch((error: AxiosError) => {
                     Alert.alert("Ops...", `Ocorreu um erro ao atualizar a lista de favoritos: ${error.message}`)
+                }).finally(() => {
+                    setLoading(false)
                 });
             });
         } else {
@@ -54,7 +58,7 @@ export default () => {
         navigation.navigate("Home");
     }
 
-    const handleRemoveCity = (itemCity: WeatherStoreClass) => {       
+    const handleRemoveCity = (itemCity: WeatherStoreClass) => {
         const storageData = getFavoritesStorage();
         const list: Array<WeatherStoreClass> = storageData.list;
         const listWithOut = list.filter((x) => x.cityLabel != itemCity.cityLabel);
@@ -66,15 +70,23 @@ export default () => {
         }));
     }
 
+    const listener = storage.addOnValueChangedListener((changedKey) => {
+        const newValue = storage.getString(changedKey)
+
+        if (newValue) {
+            setListFavorites(JSON.parse(newValue).list);
+        }
+    })
+
     useEffect(() => {
         const storageData = getFavoritesStorage();
         setListFavorites(storageData.list);
     }, []);
 
     useEffect(() => {
-        //Atualiza o clima a cada 5 minutos = 60000 * 5
         updateListFavorites();
 
+        //Atualiza o clima a cada 5 minutos = 60000 * 5
         const interval = setInterval(() => {
             updateListFavorites();
         }, 5 * 60000);
@@ -100,7 +112,11 @@ export default () => {
                 }
 
                 {
-                    listFavoritesDetails?.map((item: WeatherStoreClass, index) => {
+                    loading && <ActivityIndicator size="large" color={"#3A576F"} />
+                }
+
+                {
+                    !loading && listFavoritesDetails?.map((item: WeatherStoreClass, index) => {
                         return (
                             <View key={index} style={style.contentCity}>
                                 <TouchableOpacity onPress={handleSelectCity.bind(this, item)} style={style.cardButton}>
@@ -118,6 +134,7 @@ export default () => {
                     })
                 }
             </View>
+
         </ScrollView>
     )
 }

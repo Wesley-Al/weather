@@ -47,13 +47,13 @@ const Header = (props: DrawerHeaderProps) => {
     }
 
     const updateStorage = () => {
+        debugger;
         const listStorage: Array<WeatherStoreClass> = storageFavorites.list;
-        const contains = listStorage.findIndex((x) => x == currentWeather) > -1;
 
-        if (contains) {
+        if (verifyContains(listStorage)) {
             storage.set("favorites", JSON.stringify({
                 list:
-                    [...listStorage.filter(x => x != currentWeather)]
+                    [...listStorage.filter((x) => x.cityLabel != currentWeather?.cityLabel)]
             }));
 
             setContainsList(false);
@@ -64,12 +64,12 @@ const Header = (props: DrawerHeaderProps) => {
     }
 
     const verifyContains = (list: Array<WeatherStoreClass>) => {
-        return list.findIndex((x) => x == currentWeather) > -1;
+        return list.findIndex((x) => x.cityLabel == currentWeather?.cityLabel) > -1;
     }
 
     useEffect(() => {
-        const listStorage: Array<WeatherStoreClass> = storageFavorites.list;
-        setContainsList(verifyContains(listStorage))
+        const listStorage: Array<WeatherStoreClass> = getFavoritesStorage().list;
+        setContainsList(verifyContains(listStorage));
     }, [currentWeather]);
 
     return (

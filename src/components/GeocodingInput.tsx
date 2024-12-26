@@ -1,9 +1,11 @@
 import { TOKEN_GEOLOCATION_GOOGLE } from "@env";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteProps } from 'react-native-google-places-autocomplete';
 import 'react-native-get-random-values';
 import CustomText from './CustomText';
 import { getFontFamily } from '../utils/fontFamily';
+import { storage } from "../store/local/Storage";
+import { WeatherStoreClass } from "../class/WeatherStoreClass";
 
 export interface GooglePlacesInputProps extends GooglePlacesAutocompleteProps {
     handleSelectCity: (data: GooglePlaceData, details: GooglePlaceDetail | null) => void
@@ -11,6 +13,7 @@ export interface GooglePlacesInputProps extends GooglePlacesAutocompleteProps {
 
 const GooglePlacesInput = (props: GooglePlacesInputProps) => {
     const [inputFocus, setInputFocus] = useState(false);
+    const [listFavorites, setListFavorites] = useState<Array<any>>([]);
 
     const handleChange = (text: string) => {
         return text;
@@ -22,9 +25,33 @@ const GooglePlacesInput = (props: GooglePlacesInputProps) => {
         );
     }
 
+    const listener = storage.addOnValueChangedListener((changedKey) => {
+        const newValue = storage.getString(changedKey)
+
+        if (newValue) {
+            updateList(newValue);
+        }
+    })
+
+    const updateList = (storageValue: string) => {
+        const list: Array<WeatherStoreClass> = JSON.parse(storageValue).list;
+
+        setListFavorites(list.map((item) => {
+            return {
+                description: item.cityLabel,
+                geometry: { location: { lat: item.lat, lng: item.lon } },
+            }
+        }));
+    }
+
+    useEffect(() => {
+        updateList(storage.getString("favorites") ?? "{}");
+    }, []);
+
     return (
         <GooglePlacesAutocomplete
             {...props}
+            predefinedPlaces={listFavorites}
             preProcess={handleChange}
             placeholder='Pesquisar...'
             onPress={props.handleSelectCity}
