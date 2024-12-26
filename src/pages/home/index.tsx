@@ -140,6 +140,7 @@ export default () => {
                     <View style={{ flex: 1, flexDirection: "column", gap: 2 }}>
                         <CustomText size={37}>{convertCelsius(currentCity?.current.temp)}</CustomText>
                         <CustomText style={{ textTransform: "capitalize" }}>{currentHours} {currentCity?.current.weather[0].description}</CustomText>
+                        <CustomText size={13}>Umidade em {currentCity?.current.humidity.toString()}%</CustomText>
                     </View>
 
                     <View style={{ flex: 1, flexDirection: "column", gap: 15 }}>

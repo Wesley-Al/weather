@@ -122,7 +122,7 @@ export default () => {
                                 <TouchableOpacity onPress={handleSelectCity.bind(this, item)} style={style.cardButton}>
                                     <View style={{ flex: 1 }}>
                                         <Text numberOfLines={1} text={item.cityLabel} />
-                                        <Text style={{ textTransform: "capitalize" }} size={12} text={item.weatherDescription} />
+                                        <Text numberOfLines={1} style={{ textTransform: "capitalize" }} size={12} text={item.weatherDescription} />
                                     </View>
                                     <CustomText style={style.badgeWeather} size={15} color="#1F249F">{item.weatherTemp}</CustomText>
                                 </TouchableOpacity>
