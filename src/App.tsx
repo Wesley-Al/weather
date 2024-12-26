@@ -55,7 +55,7 @@ export default function App() {
         screenOptions={configDrawer}
         initialRouteName="Home">
         <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Lista de favoritos" component={Favorites} />
+        <Drawer.Screen name="Favoritos" component={Favorites} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

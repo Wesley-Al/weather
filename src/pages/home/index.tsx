@@ -35,8 +35,7 @@ export default () => {
     const [imageWeather, setImageWeather] = useState();
     const [currentCity, setCurrentCity] = useState<WeatherClass>();
     const [currentHours, setCurrentHours] = useState("");
-    const { setCurrentWeather } = useWeatherStore();
-
+    const { setCurrentWeather, currentWeather } = useWeatherStore();
 
     const navigation = useNavigation();
 
@@ -48,19 +47,15 @@ export default () => {
         const geometryLocation = details?.geometry.location;
 
         if (geometryLocation != null) {
-            WeatherService.getList(geometryLocation.lat, geometryLocation.lng)
-                .then((response: AxiosResponse<WeatherClass>) => {
-                    setCurrentWeather({
-                        lat: response.data.lat,
-                        lon: response.data.lon,
-                        cityLabel: data.description
-                    });
-
-                    setCurrentCity(response.data);
-                })
-                .catch((error: AxiosError) => {
-                    Alert.alert("Ops...", "Ocorreu um erro na pesquisa")
+            getWeather(geometryLocation.lat, geometryLocation.lng, (response) => {
+                setCurrentWeather({
+                    lat: response.data.lat,
+                    lon: response.data.lon,
+                    cityLabel: data.description
                 });
+
+                setCurrentCity(response.data);
+            });
         }
     }
 
@@ -106,7 +101,7 @@ export default () => {
 
     useEffect(() => {
         setImageWeather(require("../../assets/wallpaper-weather/light/sunny.jpg"));
-        storage.delete("favorites");
+
         const interval = setInterval(() => {
             setCurrentHours(new Date().toLocaleString("pt-Br", {
                 timeStyle: "short",
@@ -117,9 +112,25 @@ export default () => {
         return () => {
             clearInterval(interval);
         }
-
-        
     }, [currentCity]);
+
+    const getWeather = (lat: number, long: number, callback: (response: AxiosResponse<WeatherClass>) => void) => {
+        WeatherService.getList(lat, long)
+            .then((response: AxiosResponse<WeatherClass>) => {
+                callback(response);
+            })
+            .catch((error: AxiosError) => {
+                Alert.alert("Ops...", "Ocorreu um erro na pesquisa")
+            });
+    }
+
+    useEffect(() => {
+        if (currentWeather != null) {
+            getWeather(currentWeather.lat, currentWeather.lon, (response) => {
+                setCurrentCity(response.data);
+            });
+        }
+    }, [currentWeather])
 
     return (
         <View style={{ backgroundColor: "black" }}>
@@ -133,7 +144,7 @@ export default () => {
 
                     <View style={{ flex: 1, flexDirection: "column", gap: 15 }}>
                         <CustomText>{convertCelsius(peakCelsius(true, currentCity?.hourly)?.temp)} / {convertCelsius(peakCelsius(false, currentCity?.hourly)?.temp)} Sensação térmica de {convertCelsius(currentCity?.current.feels_like)}</CustomText>
-                        <GoogleInput handleSelectCity={handleSelectCity} />
+                        <GoogleInput currentLocationLabel={currentWeather?.cityLabel} handleSelectCity={handleSelectCity} />
                     </View>
                 </View>
             </ScrollView>

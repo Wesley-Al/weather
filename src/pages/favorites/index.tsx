@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { storage } from "../../store/local/Storage"
+import { getFavoritesStorage, storage } from "../../store/local/Storage"
 import CustomText from "../../components/CustomText"
 import { ScrollView } from "react-native-gesture-handler"
 import { WeatherStoreClass } from "../../class/WeatherStoreClass"
@@ -30,19 +30,23 @@ export default () => {
     }
 
     const updateListFavorites = () => {
-        listFavorites?.forEach((item: WeatherStoreClass, index) => {
-            WeatherService.getList(item.lat, item.lon, "minutely,hourly,daily,alerts").then((response: AxiosResponse<WeatherClass>) => {
-                item.weatherDescription = response.data.current.weather[0].description;
-                item.weatherTemp = convertCelsius(response.data.current.temp);
+        if (listFavorites.length != 0) {
+            listFavorites?.forEach((item: WeatherStoreClass, index) => {
+                WeatherService.getList(item.lat, item.lon, "minutely,hourly,daily,alerts").then((response: AxiosResponse<WeatherClass>) => {
+                    item.weatherDescription = response.data.current.weather[0].description;
+                    item.weatherTemp = convertCelsius(response.data.current.temp);
 
-                setListFavoritesDetails((payload) => {
-                    const list = payload.filter(x => x.cityLabel != item.cityLabel);
-                    return [...list, item];
-                })
-            }).catch((error: AxiosError) => {
-                Alert.alert("Ops...", `Ocorreu um erro ao atualizar a lista de favoritos: ${error.message}`)
+                    setListFavoritesDetails((payload) => {
+                        const list = payload.filter(x => x.cityLabel != item.cityLabel);
+                        return [...list, item];
+                    })
+                }).catch((error: AxiosError) => {
+                    Alert.alert("Ops...", `Ocorreu um erro ao atualizar a lista de favoritos: ${error.message}`)
+                });
             });
-        });
+        } else {
+            setListFavoritesDetails([]);
+        }
     }
 
     const handleSelectCity = (city: WeatherStoreClass) => {
@@ -50,8 +54,20 @@ export default () => {
         navigation.navigate("Home");
     }
 
+    const handleRemoveCity = (itemCity: WeatherStoreClass) => {       
+        const storageData = getFavoritesStorage();
+        const list: Array<WeatherStoreClass> = storageData.list;
+        const listWithOut = list.filter((x) => x.cityLabel != itemCity.cityLabel);
+
+        setListFavorites(listWithOut);
+        storage.set("favorites", JSON.stringify({
+            ...storageData,
+            list: listWithOut
+        }));
+    }
+
     useEffect(() => {
-        const storageData = JSON.parse(storage.getString("favorites") ?? "{}");
+        const storageData = getFavoritesStorage();
         setListFavorites(storageData.list);
     }, []);
 
@@ -77,7 +93,7 @@ export default () => {
                 </View>
 
                 {
-                    listFavoritesDetails?.length == 0 || listFavoritesDetails == null &&
+                    (listFavoritesDetails?.length == 0 || listFavoritesDetails == null) &&
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center", width: "100%" }}>
                         <Text text="Sua lista esta vazia" />
                     </View>
@@ -87,14 +103,14 @@ export default () => {
                     listFavoritesDetails?.map((item: WeatherStoreClass, index) => {
                         return (
                             <View key={index} style={style.contentCity}>
-                                <TouchableOpacity onPress={handleSelectCity} style={style.cardButton}>
+                                <TouchableOpacity onPress={handleSelectCity.bind(this, item)} style={style.cardButton}>
                                     <View style={{ flex: 1 }}>
                                         <Text numberOfLines={1} text={item.cityLabel} />
                                         <Text style={{ textTransform: "capitalize" }} size={12} text={item.weatherDescription} />
                                     </View>
                                     <CustomText style={style.badgeWeather} size={15} color="#1F249F">{item.weatherTemp}</CustomText>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ padding: 17, backgroundColor: "white", borderRadius: 60 }}>
+                                <TouchableOpacity onPress={handleRemoveCity.bind(this, item)} style={{ padding: 17, backgroundColor: "white", borderRadius: 60 }}>
                                     <SVGTrash fill={"#E0605A"} width={20} height={20} />
                                 </TouchableOpacity>
                             </View>

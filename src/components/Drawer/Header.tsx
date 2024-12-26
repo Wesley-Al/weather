@@ -42,7 +42,7 @@ const Header = (props: DrawerHeaderProps) => {
                 </TouchableOpacity>);
 
         } else {
-            return (<CustomText>{routeName}</CustomText>);
+            return (<CustomText style={{ textAlign: "left", width: "100%" }} size={20}>{routeName}</CustomText>);
         }
     }
 

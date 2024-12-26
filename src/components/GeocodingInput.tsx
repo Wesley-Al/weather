@@ -1,11 +1,11 @@
 import { TOKEN_GEOLOCATION_GOOGLE } from "@env";
 import React, { useState } from 'react';
-import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteProps } from 'react-native-google-places-autocomplete';
 import 'react-native-get-random-values';
 import CustomText from './CustomText';
 import { getFontFamily } from '../utils/fontFamily';
 
-export interface GooglePlacesInputProps {
+export interface GooglePlacesInputProps extends GooglePlacesAutocompleteProps {
     handleSelectCity: (data: GooglePlaceData, details: GooglePlaceDetail | null) => void
 }
 
@@ -24,6 +24,7 @@ const GooglePlacesInput = (props: GooglePlacesInputProps) => {
 
     return (
         <GooglePlacesAutocomplete
+            {...props}
             preProcess={handleChange}
             placeholder='Pesquisar...'
             onPress={props.handleSelectCity}
