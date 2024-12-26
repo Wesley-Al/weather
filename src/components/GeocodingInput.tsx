@@ -1,25 +1,16 @@
+import { TOKEN_GEOLOCATION_GOOGLE } from "@env";
 import React, { useState } from 'react';
-import { TextInput } from 'react-native';
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
 import CustomText from './CustomText';
 import { getFontFamily } from '../utils/fontFamily';
 
-const GooglePlacesInput = () => {
+export interface GooglePlacesInputProps {
+    handleSelectCity: (data: GooglePlaceData, details: GooglePlaceDetail | null) => void
+}
+
+const GooglePlacesInput = (props: GooglePlacesInputProps) => {
     const [inputFocus, setInputFocus] = useState(false);
-    const [currentCity, setCurrentCity] = useState({
-        data: {} as GooglePlaceData,
-        details: {} as GooglePlaceDetail | null
-    })
-    const homePlace = {
-        description: 'Home',
-        geometry: { location: { lat: 48.8152937, lng: 2.4597668 } },
-    };
-    const workPlace = {
-        description: 'Work',
-        geometry: { location: { lat: 48.8496818, lng: 2.2940881 } },
-    };
 
     const handleChange = (text: string) => {
         return text;
@@ -27,29 +18,21 @@ const GooglePlacesInput = () => {
 
     const renderOption = (data: GooglePlaceData, index: number) => {
         return (
-            <CustomText style={{}}>{data.description}</CustomText>
+            <CustomText>{data.description}</CustomText>
         );
     }
 
     return (
-
         <GooglePlacesAutocomplete
             preProcess={handleChange}
             placeholder='Pesquisar...'
-            onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                debugger;
-                console.log(data, details);
-                setCurrentCity({
-                    data: data, 
-                    details: details
-                })
-            }}
+            onPress={props.handleSelectCity}
             query={{
-                key: 'AIzaSyCGK4iT4aiS3C79y9AjwDhUyy-QHG46Nxc',
+                key: TOKEN_GEOLOCATION_GOOGLE,
                 language: 'pt-BR',
             }}
-            
+            fetchDetails={true}
+            listViewDisplayed={false}
             renderRow={renderOption}
             textInputProps={{
                 onBlur: () => {
@@ -65,7 +48,8 @@ const GooglePlacesInput = () => {
                     textInput: {
                         color: 'white',
                         backgroundColor: 'transparent',
-                        fontFamily: getFontFamily("normal")
+                        fontFamily: getFontFamily("normal"),
+                        textAlign: "center"
                     },
                     container: {
                         borderTopEndRadius: 0,

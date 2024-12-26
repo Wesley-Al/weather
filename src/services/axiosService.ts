@@ -1,8 +1,8 @@
-import UserInfo from "@/class/UserInfo";
-import axios, { AxiosPromise, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosPromise, AxiosRequestConfig } from "axios";
+import { URL_OPEN_WEATHER } from '@env';
+import { Alert } from "react-native";
 
-//const apiUrl = "https://api-template.moontec.me/api";
-const apiUrl = "http://localhost:8000/api";
+const apiUrl = URL_OPEN_WEATHER;
 
 export const AxiosService = {
     get: (url: string): AxiosPromise<any> => {
@@ -37,24 +37,15 @@ export const AxiosService = {
 }
 
 export const validateResponse = (response: AxiosPromise) => {
-    response.catch((error) => {
-        if(error.response.status == 401) {
-            window.localStorage.removeItem("userInfo");
-            window.location.pathname = "/";
-        }
+    response.catch((error: AxiosError) => {
+        Alert.alert("Ops...", "Ocorreu eu erro na atualização dos dados. Por favor, tente novamente mais tarde:");
     });
-}
-
-export const getTokenUser = () => {
-    const user = JSON.parse(window.localStorage.getItem("userInfo") ?? "{}") as UserInfo;
-    return user.token;
 }
 
 export const getHeaderRequest = () => {
     return {
         "headers": {
-            "Accept": "application/json",
-            "Authorization": `Bearer ${getTokenUser()}`
-        }        
+            "Accept": "application/json"
+        }
     } as AxiosRequestConfig
 }

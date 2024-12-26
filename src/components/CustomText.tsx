@@ -1,5 +1,6 @@
 import { Text, TextStyle } from "react-native";
 import { getFontFamily } from "../utils/fontFamily";
+import { ReactNode } from "react";
 
 const CustomText = (props: { children: string, size?: number, color?: string, style?: TextStyle }) => {
     return (

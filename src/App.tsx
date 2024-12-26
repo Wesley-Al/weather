@@ -1,16 +1,14 @@
-import * as React from 'react';
-import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { createDrawerNavigator, DrawerHeaderProps, DrawerNavigationOptions } from '@react-navigation/drawer';
 import { DefaultTheme, DrawerActions, NavigationContainer, useNavigation } from '@react-navigation/native';
-import { Button } from '@react-navigation/elements';
+import * as React from 'react';
+import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { SafeAreaView } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import Home from './pages/home';
-import CustomText from './components/CustomText';
-import SVGStar from "./assets/icons/star.svg";
 import SVGMenu from "./assets/icons/menu.svg";
+import SVGStar from "./assets/icons/star.svg";
+import CustomText from './components/CustomText';
 import MyDrawer from './components/Drawer';
+import Favorites from './pages/favorites';
+import Home from './pages/home';
 import { getFontFamily } from './utils/fontFamily';
 
 const Drawer = createDrawerNavigator();
@@ -84,7 +82,7 @@ export default function App() {
         screenOptions={confiDrawer}
         initialRouteName="Home">
         <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Lista de favoritos" component={Home} />
+        <Drawer.Screen name="Lista de favoritos" component={Favorites} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
