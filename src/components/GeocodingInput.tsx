@@ -36,12 +36,14 @@ const GooglePlacesInput = (props: GooglePlacesInputProps) => {
     const updateList = (storageValue: string) => {
         const list: Array<WeatherStoreClass> = JSON.parse(storageValue).list;
 
-        setListFavorites(list.map((item) => {
-            return {
-                description: item.cityLabel,
-                geometry: { location: { lat: item.lat, lng: item.lon } },
-            }
-        }));
+        if (list) {
+            setListFavorites(list.map((item) => {
+                return {
+                    description: item.cityLabel,
+                    geometry: { location: { lat: item.lat, lng: item.lon } },
+                }
+            }));
+        }
     }
 
     useEffect(() => {
